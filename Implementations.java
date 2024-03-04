@@ -1,14 +1,14 @@
-import Strings.RabinKarp;
-
+import DynamicProgramming.ClassicalProblems;
 
 public class Implementations {
 
 
 
     public static void main(String[] args) {
-        RabinKarp rp = new RabinKarp(101L, (long) (1e9 + 9));
+        ClassicalProblems cp = new ClassicalProblems();
+        int[] nums = new int[] {2, 3, 5, 6, 8, 10};
+        System.out.println(cp.subsetSumCount(nums, 10));
 
-        System.out.println(rp.rabinKarp("abc", "abcababc"));
     }
 
 }
