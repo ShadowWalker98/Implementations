@@ -6,9 +6,11 @@ public class Implementations {
 
     public static void main(String[] args) {
         ClassicalProblems cp = new ClassicalProblems();
-        int[] nums = new int[] {0,0,0,0,0,0,0,0,1};
+        int[] lengths = new int[] {1,2,3,4,5,6,7,8};
+        int[] profit = new int[] {1,5,8,9,10,17,17,20};
 
-        System.out.println(cp.countNumSubsetsWithDiff(nums, 1));
+        System.out.println(cp.rodCuttingDP(lengths, profit, 8));
+
 
     }
 
