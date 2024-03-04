@@ -40,6 +40,156 @@ public class ClassicalProblems {
         return ((i >= 0 && i < r) && (j >= 0 && j < c));
     }
 
+    // refer to problem 494. Target Sum on leetcode
+    // based off of subset with diff
+    // didn't work, so I put the editorial solution
+    public int targetSum(int[] nums, int target) {
+        int range = 0;
+
+        for(int num: nums) {
+            range += num;
+        }
+
+        int[][] dp = targetSumHelper(nums, range);
+
+        // target is basically diff
+        int s1 = (range + target) / 2;
+
+        return dp[nums.length][s1];
+    }
+
+    public int findTargetSumWays(int[] nums, int S) {
+        int total = Arrays.stream(nums).sum();
+        int[][] dp = new int[nums.length][2 * total + 1];
+        dp[0][nums[0] + total] = 1;
+        dp[0][-nums[0] + total] += 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            for (int sum = -total; sum <= total; sum++) {
+                if (dp[i - 1][sum + total] > 0) {
+                    dp[i][sum + nums[i] + total] += dp[i - 1][sum + total];
+                    dp[i][sum - nums[i] + total] += dp[i - 1][sum + total];
+                }
+            }
+        }
+
+        for(int[] row : dp) {
+            System.out.println(Arrays.toString(row));
+        }
+        return Math.abs(S) > total ? 0 : dp[nums.length - 1][S + total];
+    }
+
+    private int[][] targetSumHelper(int[] nums, int range) {
+
+        int[][] dp = new int[nums.length + 1][range + 1];
+
+        Arrays.fill(dp[0], 0);
+
+        for(int i = 0; i < dp.length; i++) {
+            dp[i][0] = 1;
+        }
+
+        for(int i = 1; i < dp.length; i++) {
+            for(int j = 1; j < dp[0].length; j++) {
+                if(nums[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+
+        return dp;
+    }
+
+    public int countNumSubsetsWithDiff(int[] nums, int diff) {
+        int total = 0;
+        for(int num : nums) {
+            total += num;
+        }
+        int[][] dp = subsetSumCountWithDiffHelper(nums, total);
+
+        int numSubsets = 0;
+
+        for(int j = 0; j <= total / 2; j++) {
+            int currDiff = total - (2 * j);
+            if(currDiff == diff) {
+                numSubsets += dp[nums.length][j];
+            }
+        }
+        return numSubsets;
+    }
+
+    public int[][] subsetSumCountWithDiffHelper(int[] nums, int range) {
+        int[][] dp = new int[nums.length + 1][range + 1];
+
+        Arrays.fill(dp[0], 0);
+
+        for(int i = 0; i < dp.length; i++) {
+            dp[i][0] = 1;
+        }
+
+        for(int i = 1; i < dp.length; i++) {
+            for(int j = 1; j < dp[0].length; j++) {
+
+                if(nums[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+
+        return dp;
+    }
+    public int minimumSubsetDiff(int[] nums) {
+        int range = 0;
+        for(int num : nums) {
+            range += num;
+        }
+
+        boolean[][] dp = subsetDiffHelper(nums, range);
+
+        int maxDiff = range;
+        for(int j = 0; j <= range / 2; j++) {
+            if(dp[nums.length][j]) {
+                int diff = Math.abs(range - (2 * j));
+                if(diff < maxDiff) {
+                    maxDiff = diff;
+                }
+            }
+        }
+
+        return maxDiff;
+
+    }
+
+    public boolean[][] subsetDiffHelper(int[] nums, int range) {
+        boolean[][] dp = new boolean[nums.length + 1][range + 1];
+
+        for(int i = 0; i < dp.length; i++) {
+            for(int j = 0; j < dp[0].length; j++) {
+                if(i == 0) {
+                    dp[i][j] = false;
+                }
+                if(j == 0) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+
+        for(int i = 1; i < dp.length; i++) {
+            for(int j = 1; j < dp[0].length; j++) {
+                if(nums[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+
+        return dp;
+    }
 
     public int zeroOneKnapsack(int[] weights, int[] values, int capacity) {
         return profitBottomUp(weights, values, capacity);
