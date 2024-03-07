@@ -11,12 +11,19 @@ public class Implementations {
 
         int[] coins = new int[] {1, 2, 5};
 
+        System.out.println(cp.minInsertionsToMakeItPalindrome("abc"));
+
 //        System.out.println(cp.rodCuttingDP(lengths, profit, 8));
 //        System.out.println(cp.coinChangeTwo(new int[] {1, 2, 5}, 5));
 
 //        System.out.println(cp.minNumberCoins(coins, 11));
 
-        System.out.println(cp.longestCommonSubsequence("abc", "cbc", 3, 3));
+//        System.out.println(cp.longestCommonSubsequence("abc", "cbc", 3, 3));
+
+//        System.out.println(cp.shortestCommonSuperSequence("abac", "cab"));
+
+//        System.out.println(cp.sequencePatternMatching("abd", "azbcasc"));
+
 
 
     }

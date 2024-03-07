@@ -27,9 +27,16 @@ public class ClassicalProblems {
     }
 
     public int longestCommonSubsequence(String a, String b, int idx1, int idx2) {
-        return lcs.lcsRec(a, b, idx1, idx2);
+        return lcs.lcsMemo(a, b, idx1, idx2);
     }
 
+    public String shortestCommonSuperSequence(String a, String b) {
+        return lcs.shortestCommonSupersequence(a, b);
+    }
+
+    public boolean sequencePatternMatching(String a, String b) {
+        return lcs.sequencePatternMatching(a, b);
+    }
 
 
     /* Leetcode #64: Find the minimum path sum to exit out of the grid at (m, n)
@@ -66,6 +73,9 @@ public class ClassicalProblems {
         return ((i >= 0 && i < r) && (j >= 0 && j < c));
     }
 
+    public int minInsertionsToMakeItPalindrome(String s) {
+        return lcs.minInsertionsToMakePalindrome(s);
+    }
 
 
 }
