@@ -8,10 +8,13 @@ public class ClassicalProblems {
     UnboundedKnapsack unboundedKnapsack;
     LongestCommonSubsequence lcs;
 
+    MatrixChainMultiplication mcm;
+
     public ClassicalProblems() {
         zeroOneKnapsack = new ZeroOneKnapsack();
         unboundedKnapsack = new UnboundedKnapsack();
         lcs = new LongestCommonSubsequence();
+        mcm = new MatrixChainMultiplication();
     }
 
     public int rodCuttingDP(int[] nums, int[] profit, int length) {
@@ -77,5 +80,8 @@ public class ClassicalProblems {
         return lcs.minInsertionsToMakePalindrome(s);
     }
 
+    public int palindromePartitioning(String s) {
+        return mcm.palindromePartitioning(s);
+    }
 
 }
