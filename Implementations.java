@@ -30,17 +30,6 @@ public class Implementations {
 
         GraphDriver gd = new GraphDriver();
 
-        int[][] preqreq = new int[4][2];
-
-        preqreq[0][0] = 1;
-        preqreq[0][1] = 0;
-        preqreq[1][0] = 2;
-        preqreq[1][1] = 0;
-        preqreq[2][0] = 3;
-        preqreq[2][1] = 1;
-        preqreq[3][0] = 3;
-        preqreq[3][1] = 2;
-
 //        System.out.println(Arrays.toString(gd.courseSchedulingTwo(preqreq, 4)));
 
         int[][] graph = new int[4][];
@@ -58,8 +47,49 @@ public class Implementations {
 
 //        System.out.println(sw.maxOfAllSubarraysOfK(new int[]{-7,-8,7,5,7,1,6,0}, 4));
 
-        System.out.println(sw.maxDistinctSubarraySum(new int[]{1,5,4,2,9,9,9}, 3));
+//        System.out.println(sw.maxDistinctSubarraySum(new int[]{1,5,4,2,9,9,9}, 3));
 
+        int[][] grid = new int[6][6];
+
+        for(int i = 0; i < grid.length; i++) {
+            grid[i][i] = 0;
+        }
+
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                grid[i][j] = Integer.MAX_VALUE;
+
+                if(i == j) {
+                    grid[i][j] = 0;
+                }
+            }
+        }
+
+        grid[0][1] = 2;
+        grid[0][2] = 1;
+        grid[0][3] = 3;
+
+        grid[1][2] = 4;
+        grid[1][5] = 3;
+
+        grid[2][3] = 6;
+        grid[2][4] = 1;
+        grid[2][5] = 3;
+
+        grid[3][4] = 2;
+
+        grid[5][4] = 3;
+
+//        gd.dijkstras(grid, 0);
+
+        int[][] times = new  int[][]{{2,1,1},{2,3,1},{3,4,1}};
+        System.out.println(gd.networkDelay(times, 4, 2));
+
+        int[][] times2 = new  int[][]{{1,2,1}};
+        System.out.println(gd.networkDelay(times2, 2, 1));
+
+        int[][] times3 = new  int[][]{{1,2,1}};
+        System.out.println(gd.networkDelay(times3, 2, 2));
 
 
     }

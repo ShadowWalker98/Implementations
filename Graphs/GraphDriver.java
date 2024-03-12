@@ -6,10 +6,12 @@ public class GraphDriver {
 
     TopologicalSort topoSort;
     BfsDfs bd;
+    ShortestPath sp;
 
     public GraphDriver() {
         topoSort = new TopologicalSort();
         bd = new BfsDfs();
+        sp = new ShortestPath();
     }
 
     public int[] courseSchedulingTwo(int[][] prerequisites, int numCourses) {
@@ -23,6 +25,12 @@ public class GraphDriver {
         return bd.allPathsSourceTarget(graph);
     }
 
+    public void dijkstras(int[][] graph, int src) {
+        sp.dijkstras(graph, src);
+    }
 
+    public int networkDelay(int[][] times, int n, int k) {
+        return sp.networkDelay(times, n, k);
+    }
 
 }
