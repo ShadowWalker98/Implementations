@@ -174,7 +174,46 @@ public class MatrixChainMultiplication {
         return 0;
     }
 
+    public int getMinLargestSplitSum(Integer[][] memo, int[] prefixSum, int currIdx, int m) {
+        int n = prefixSum.length - 1;
+        if(memo[currIdx][m] != null) {
+            return memo[currIdx][m];
+        }
+        if(m == 1) {
+            return memo[currIdx][m] = prefixSum[n] - prefixSum[currIdx];
+        }
 
+        int minLargestSplitSum = Integer.MAX_VALUE;
+        for(int i = currIdx; i <= n - m; i++) {
+            int firstSplitSum = prefixSum[i + 1] - prefixSum[currIdx];
+            int largestSplitSum = Math.max(getMinLargestSplitSum(memo, prefixSum, i + 1, m - 1), firstSplitSum);
+            minLargestSplitSum = Math.min(largestSplitSum, minLargestSplitSum);
+            if(firstSplitSum >= minLargestSplitSum) {
+                break;
+            }
+        }
+
+        return memo[currIdx][m] = minLargestSplitSum;
+    }
+    public int splitArray(int[] nums, int m) {
+        Integer[][] memo = new Integer[1001][51];
+        int n = nums.length;
+        int ans = Integer.MAX_VALUE;
+        int[] prefixSums = new int[n + 1];
+        for(int i = 0; i < n; i++) {
+            // 1,2,3
+            // 0, 1, 3, 6
+            // so if idx is 0
+            // then the prefixSum is at prefixSum[1]
+            // if idx is 1 then prefixSum is at prefixSum[2]
+
+            // we want to find subarray of [2,2] then we do prefixSum[3] - prefixSum[2]
+            // [a,b] then prefixSum[b + 1] - prefixSum[a]
+            prefixSums[i + 1] = nums[i] + prefixSums[i];
+        }
+
+        return getMinLargestSplitSum(memo, prefixSums, 0, m);
+    }
 
 
 }

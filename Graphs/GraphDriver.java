@@ -33,4 +33,8 @@ public class GraphDriver {
         return sp.networkDelay(times, n, k);
     }
 
+    public int findCheapestFlights(int n, int[][] flights, int src, int dst, int k) {
+        return sp.findCheapestFlights(n, flights, src, dst, k);
+    }
+
 }

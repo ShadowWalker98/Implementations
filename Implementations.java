@@ -1,8 +1,10 @@
 import DynamicProgramming.ClassicalProblems;
 import Graphs.GraphDriver;
-import Strings.SlidingWindow;
+import Graphs.ShortestPath;
+import Arrays.Strings.SlidingWindow;
+import Arrays.Subarrays;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class Implementations {
 
@@ -49,49 +51,108 @@ public class Implementations {
 
 //        System.out.println(sw.maxDistinctSubarraySum(new int[]{1,5,4,2,9,9,9}, 3));
 
-        int[][] grid = new int[6][6];
-
-        for(int i = 0; i < grid.length; i++) {
-            grid[i][i] = 0;
-        }
-
-        for(int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid[0].length; j++) {
-                grid[i][j] = Integer.MAX_VALUE;
-
-                if(i == j) {
-                    grid[i][j] = 0;
-                }
-            }
-        }
-
-        grid[0][1] = 2;
-        grid[0][2] = 1;
-        grid[0][3] = 3;
-
-        grid[1][2] = 4;
-        grid[1][5] = 3;
-
-        grid[2][3] = 6;
-        grid[2][4] = 1;
-        grid[2][5] = 3;
-
-        grid[3][4] = 2;
-
-        grid[5][4] = 3;
+//        int[][] grid = new int[6][6];
+//
+//        for(int i = 0; i < grid.length; i++) {
+//            grid[i][i] = 0;
+//        }
+//
+//        for(int i = 0; i < grid.length; i++) {
+//            for(int j = 0; j < grid[0].length; j++) {
+//                grid[i][j] = Integer.MAX_VALUE;
+//
+//                if(i == j) {
+//                    grid[i][j] = 0;
+//                }
+//            }
+//        }
+//
+//        grid[0][1] = 2;
+//        grid[0][2] = 1;
+//        grid[0][3] = 3;
+//
+//        grid[1][2] = 4;
+//        grid[1][5] = 3;
+//
+//        grid[2][3] = 6;
+//        grid[2][4] = 1;
+//        grid[2][5] = 3;
+//
+//        grid[3][4] = 2;
+//
+//        grid[5][4] = 3;
 
 //        gd.dijkstras(grid, 0);
 
-        int[][] times = new  int[][]{{2,1,1},{2,3,1},{3,4,1}};
-        System.out.println(gd.networkDelay(times, 4, 2));
+//        int[][] times = new  int[][]{{2,1,1},{2,3,1},{3,4,1}};
+//        System.out.println(gd.networkDelay(times, 4, 2));
+//
+//        int[][] times2 = new  int[][]{{1,2,1}};
+//        System.out.println(gd.networkDelay(times2, 2, 1));
+//
+//        int[][] times3 = new  int[][]{{1,2,1}};
+//        System.out.println(gd.networkDelay(times3, 2, 2));
 
-        int[][] times2 = new  int[][]{{1,2,1}};
-        System.out.println(gd.networkDelay(times2, 2, 1));
+        int[][] flights = new int[][]{{0,1,1},{0,2,5},{1,2,1},{2,3,1}};
+        int src = 0;
+        int dst = 3;
+        int k = 1;
+        int n = 4;
 
-        int[][] times3 = new  int[][]{{1,2,1}};
-        System.out.println(gd.networkDelay(times3, 2, 2));
+//        System.out.println(gd.findCheapestFlights(n, flights, src, dst, k));
+        ShortestPath sp = new ShortestPath();
 
+        int[][] grid = new int[][] {{1,1,1,1},{2,2,2,2},{1,1,1,1},{2,2,2,2}};
 
+//        System.out.println(sp.minCost(grid));
+
+        int[][] edges = new int[][]{{0,1,3},{1,2,1},{1,3,4},{2,3,1}};
+        int num = 4;
+        int dt = 4;
+
+//        System.out.println(sp.findTheCity(num, edges, dt));
+
+        Map<Integer, List<int[]>> bfgraph = new HashMap<>();
+
+        List<int[]> s = new ArrayList<>();
+        s.add(new int[]{1, 10});
+        s.add(new int[]{5, 8});
+
+        bfgraph.put(0, s);
+
+        List<int[]> a = new ArrayList<>();
+        a.add(new int[]{3, 2});
+
+        bfgraph.put(1, a);
+
+        List<int[]> b = new ArrayList<>();
+        b.add(new int[]{1, 1});
+
+        bfgraph.put(2, b);
+
+        List<int[]> c = new ArrayList<>();
+        c.add(new int[]{2, -2});
+
+        bfgraph.put(3, c);
+
+        List<int[]> d = new ArrayList<>();
+        d.add(new int[]{1, -4});
+        d.add(new int[]{3, -1});
+
+        bfgraph.put(4, d);
+
+        List<int[]> e = new ArrayList<>();
+        e.add(new int[]{4, 1});
+
+        bfgraph.put(5, e);
+
+//        System.out.println(bfgraph);
+
+//        System.out.println(Arrays.toString(sp.BellmanFord(bfgraph, 0, 6)));
+
+        int[] binNums = new int[]{1, 0, 1, 0, 1};
+        Subarrays subarrays = new Subarrays();
+        System.out.println(subarrays.numSubarraysWithSum(binNums, 2));
     }
 
 
