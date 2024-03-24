@@ -1,5 +1,7 @@
 package Arrays;
 
+import java.util.*;
+
 public class Subarrays {
     public Subarrays() {}
 
@@ -33,5 +35,9 @@ public class Subarrays {
         }
         return total;
     }
+
+
+
+
 
 }

@@ -1,6 +1,7 @@
 package Graphs;
 
 import java.util.*;
+import java.util.List;
 
 public class ShortestPath {
 
@@ -387,6 +388,301 @@ public class ShortestPath {
         }
     }
 
+    public double maxProbability(int n, int[][] edges, double[] succProb, int startNode, int endNode) {
+        Map<Integer, List<double[]>> adj = new HashMap<>();
+
+        for(int i = 0; i < n; i++) {
+            adj.put(i, new ArrayList<>());
+        }
+
+        // building the graph from the edges.
+
+        for(int i = 0; i < edges.length; i++) {
+            int from = edges[i][0];
+            int to = edges[i][1];
+            double wt = succProb[i];
+
+            adj.get(from).add(new double[] {to, wt});
+            adj.get(to).add(new double[] {from, wt});
+
+        }
+
+        // now implementing modded dijkstras which instead uses a PQ sorted by max probability and
+        // this cost has to be maximised instead of minimised.
+
+        // making a double array of the probabilities of the highest probability path
+        double[] distProbs = new double[n];
+        // setting probability of start node as 1
+        distProbs[startNode] = 1;
+
+        PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> {
+            return Double.compare(b[1], a[1]);
+        });
+
+        pq.add(new double[]{startNode, 1});
+
+        while(!pq.isEmpty()) {
+            double[] pair = pq.poll();
+
+            int v = (int) pair[0];
+
+            for(double[] edge : adj.get(v)) {
+                double prob = edge[1];
+                int to = (int) edge[0];
+
+                if(distProbs[v] * prob > distProbs[to]) {
+                    distProbs[to] = distProbs[v] * prob;
+                    pq.add(new double[] {to, distProbs[to]});
+                }
+            }
+        }
+        return distProbs[endNode];
+    }
+
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+
+        Map<Integer, List<EDPair>> adj = new HashMap<>();
+        Map<String, Integer> charMap = new HashMap<>();
+
+        int count = 0;
+
+        for(int i = 0; i < equations.size(); i++) {
+            String from = equations.get(i).get(0);
+            if(!charMap.containsKey(from)) {
+                charMap.put(from, count);
+                count++;
+            }
+            String to = equations.get(i).get(1);
+            if(!charMap.containsKey(to)) {
+                charMap.put(to, count);
+                count++;
+            }
+            double wt = values[i];
+
+            List<EDPair> edgesList1 = adj.getOrDefault(charMap.get(from), new ArrayList<>());
+            edgesList1.add(new EDPair(charMap.get(to), wt));
+            adj.put(charMap.get(from), edgesList1);
+
+            List<EDPair> edgesList2 = adj.getOrDefault(charMap.get(to), new ArrayList<>());
+            edgesList2.add(new EDPair(charMap.get(from), 1 / wt));
+            adj.put(charMap.get(to), edgesList2);
+        }
+
+        double[] answers = new double[queries.size()];
+        boolean[] visited = new boolean[adj.size()];
+        int track = 0;
+        for(List<String> query : queries) {
+            Arrays.fill(visited, false);
+            if(charMap.containsKey(query.get(0)) && charMap.containsKey(query.get(1))) {
+                int nr = charMap.get(query.get(0));
+                int dr = charMap.get(query.get(1));
+                answers[track] = dfs(nr, dr, visited, adj, 1);
+            } else {
+                answers[track] = -1;
+            }
+            track++;
+        }
+
+        return answers;
+    }
+
+    private double dfs(int current, int dest, boolean[] visited, Map<Integer, List<EDPair>> adj, double product) {
+
+        visited[current] = true;
+
+        if(current == dest) {
+            return product;
+        }
+
+        for(EDPair edge : adj.get(current)) {
+            int to = edge.to;
+            double wt = edge.wt;
+            if(!visited[to]) {
+                double res = dfs(to, dest, visited, adj, product * wt);
+                if(res != -1) {
+                    return res;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    class EDPair {
+        int to;
+        double wt;
+
+        public EDPair(int to, double wt) {
+            this.to = to;
+            this.wt = wt;
+        }
+    }
+
+    public int shortestPathLength(int[][] graph) {
+        if (graph.length == 1) {
+            return 0;
+        }
+
+        int n = graph.length;
+        int endingMask = (1 << n) - 1;
+        boolean[][] seen = new boolean[n][endingMask];
+        ArrayList<int[]> queue = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            queue.add(new int[] {i, 1 << i});
+            seen[i][1 << i] = true;
+        }
+
+        int steps = 0;
+        while (!queue.isEmpty()) {
+            ArrayList<int[]> nextQueue = new ArrayList<>();
+            for (int i = 0; i < queue.size(); i++) {
+                int[] currentPair = queue.get(i);
+                int node = currentPair[0];
+                int mask = currentPair[1];
+                for (int neighbor : graph[node]) {
+                    int nextMask = mask | (1 << neighbor);
+                    if (nextMask == endingMask) {
+                        return 1 + steps;
+                    }
+
+                    if (!seen[neighbor][nextMask]) {
+                        seen[neighbor][nextMask] = true;
+                        nextQueue.add(new int[] {neighbor, nextMask});
+                    }
+                }
+            }
+            steps++;
+            queue = nextQueue;
+        }
+
+        return -1;
+    }
+
+    public int reachableNodes(int[][] edges, int maxMoves, int n) {
+        Map<Integer, List<int[]>> adj = new HashMap<>();
+
+        for(int[] edge : edges) {
+            int from = edge[0];
+            int to = edge[1];
+            int wt = edge[2] + 1;
+
+            List<int[]> edgeList1 = adj.getOrDefault(from, new ArrayList<>());
+            edgeList1.add(new int[] {to, wt});
+
+            List<int[]> edgeList2 = adj.getOrDefault(to, new ArrayList<>());
+            edgeList2.add(new int[]{from , wt});
+        }
+        int[] dist = new int[n];
+        boolean[] explored = new boolean[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[0] = 0;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.add(new int[]{0, 0});
+
+        while(!pq.isEmpty()) {
+            int[] pair = pq.poll();
+            int v = pair[0];
+
+            if(explored[v]) continue;
+            else explored[v] = true;
+
+            List<int[]> edgeList = adj.get(v);
+            if(edgeList != null) {
+                for(int[] edge : edgeList) {
+                    int to = edge[0];
+                    int wt = edge[1];
+                    if(dist[v] + wt < dist[to]) {
+                        dist[to] = dist[v] + wt;
+                        pq.add(new int[]{to, dist[to]});
+                    }
+                }
+            }
+        }
+
+        int ans = 0;
+
+        for(int distance : dist) {
+            if(distance <= maxMoves) {
+                ans += 1;
+            }
+        }
+
+        for(int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+
+            if(dist[u] > maxMoves && dist[v] > maxMoves) {
+                continue;
+            }
+
+            int c1 = Math.max(0, maxMoves - dist[u]);
+            int c2 = Math.max(0, maxMoves - dist[v]);
+
+            ans += Math.min(c1 + c2, w);
+        }
+        return ans;
+    }
+
+
+    public int countPaths(int n, int[][] roads) {
+        int mod = (int) 1e9 + 7;
+
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+
+        for(int i = 0; i < roads.length; i++) {
+            int[] road = roads[i];
+
+            int u = road[0];
+            int v = road[1];
+            int w = road[2];
+
+            List<int[]> edgeList1 = graph.getOrDefault(u, new ArrayList<>());
+            edgeList1.add(new int[] {v, w});
+            graph.put(u, edgeList1);
+            List<int[]> edgeList2 = graph.getOrDefault(v, new ArrayList<>());
+            edgeList2.add(new int[] {u, w});
+            graph.put(v, edgeList2);
+        }
+
+        int[] dist = new int[n];
+
+        Arrays.fill(dist, Integer.MAX_VALUE);
+
+        int src = 0;
+        int dst = n - 1;
+        dist[src] = 0;
+        int ans = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.add(new int[] {src, 0});
+
+        while(!pq.isEmpty()) {
+            int[] nodeDetes = pq.poll();
+            int node = nodeDetes[0];
+
+            List<int[]> edges = graph.get(node);
+
+            if(edges != null) {
+                for(int[] edge : edges) {
+                    int to = edge[0];
+                    int wt = edge[1];
+
+                    if(dist[node] + wt < dist[to] ) {
+                        if(to == dst) {
+                            ans = 1;
+                        }
+                        dist[to] = dist[node] + wt;
+                        pq.add(new int[] {to, dist[to]});
+                    } else if(to == dst && dist[node] + wt == dist[to]) {
+                        ans++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 
 
 }

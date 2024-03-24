@@ -152,7 +152,10 @@ public class Implementations {
 
         int[] binNums = new int[]{1, 0, 1, 0, 1};
         Subarrays subarrays = new Subarrays();
-        System.out.println(subarrays.numSubarraysWithSum(binNums, 2));
+//        System.out.println(subarrays.numSubarraysWithSum(binNums, 2));
+
+        int ans = cp.knightDialer(3131);
+        System.out.println(ans);
     }
 
 
@@ -242,6 +245,8 @@ public class Implementations {
         }
 
         return ans;
+
+
     }
 
 }
